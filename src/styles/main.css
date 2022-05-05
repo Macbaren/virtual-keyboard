@@ -1,0 +1,46 @@
+@import url('./textButton.css');
+@import url('./keyboard.css');
+@import url('./button.css');
+
+@font-face {
+  font-family: 'Georgia';
+  src: url('../../assets/fonts/georgia.ttf');
+}
+
+* {
+  font-family: 'Georgia';
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  --main-color: darkslategray;
+  --main-text-color: mintcream;
+}
+
+h1 {
+  color: var(--main-color);
+}
+
+textarea {
+  min-width: 1000px;
+  min-height: 200px;
+  resize: none;
+  border: 1px solid var(--main-color);
+}
+
+textarea:invalid {
+  border: 2px dashed red;
+}
+
+textarea:valid {
+  border: 2px solid var(--main-color);
+}
+
+.keyboard {
+  background-color: cadetblue;
+}

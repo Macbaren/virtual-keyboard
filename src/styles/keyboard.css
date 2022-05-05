@@ -1,0 +1,9 @@
+.keyboard {
+  width: 1000px;
+  border: solid var(--main-color) 2px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
