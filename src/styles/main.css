@@ -33,6 +33,7 @@ textarea {
   min-height: 200px;
   resize: none;
   border: 1px solid var(--main-color);
+  caret-color: auto;
 }
 
 textarea:invalid {

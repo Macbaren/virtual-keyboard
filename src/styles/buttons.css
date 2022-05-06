@@ -42,7 +42,7 @@
   animation: glowing 20s linear infinite;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .button-main-text:active {
@@ -57,17 +57,28 @@
   opacity: 1;
 }
 
+.button-main-text:hover:after {
+  opacity: 0.8;
+}
+
 .button-main-text:after {
   z-index: -1;
   content: '';
   position: absolute;
   width: 100%;
   height: 100%;
-  /* background: var(--main-color); */
+  background: var(--main-color);
   left: 0;
   top: 0;
   border-radius: 5px;
-  opacity: 0.9;
+}
+
+.button-big:after,
+.button-middle:after,
+.button-small:after,
+.button-dark:after,
+.button-space {
+  background: var(--main-dark-color);
 }
 
 @keyframes glowing {
@@ -80,6 +91,10 @@
   100% {
     background-position: 0 0;
   }
+}
+
+.button-space {
+  width: 390px;
 }
 
 .button-big {
