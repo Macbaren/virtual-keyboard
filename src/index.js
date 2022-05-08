@@ -3,8 +3,13 @@ const MAIN = document.createElement('main');
 const TITLE = document.createElement('h1');
 TITLE.innerText = 'RS VIRTUAL KEYBOARD';
 
+const FOOTER = document.createElement('h3');
+FOOTER.innerText =
+  'Keyboard was created for Windows. To switch the language press Win + Space';
+
 let textareaContent = document.createElement('textarea');
 
+// ====KEYBOARD=====
 const KEYBOARD = document.createElement('div');
 KEYBOARD.className = 'keyboard';
 
@@ -23,12 +28,14 @@ FOURTH_ROW.className = 'buttons-row';
 const FIFTH_ROW = document.createElement('div');
 FIFTH_ROW.className = 'buttons-row';
 
+// =====APPENDING BLOCKS======
 document.body.appendChild(MAIN);
 MAIN.appendChild(TITLE);
 MAIN.appendChild(textareaContent);
 MAIN.appendChild(KEYBOARD);
-// KEYBOARD.insertAdjacentElement('beforeend', FIRST_ROW);
+MAIN.appendChild(FOOTER);
 
+// =====KEYBOARD ROWS====
 const FIRST_ROW_ARR = [
   '`',
   '1',
@@ -116,7 +123,7 @@ const ALL_ROWS = [
   { row: FIFTH_ROW, array: FIFTH_ROW_ARR },
 ];
 
-// ======FILL FIRST ROW=====
+// ======FILL ROWS=====
 const fillRow = (row, rowArr) => {
   rowArr.forEach((el) => {
     const BUTTON = document.createElement('button');
@@ -157,23 +164,28 @@ const fillRow = (row, rowArr) => {
   });
 };
 
+// =====FILL KEYBOARD=====
 ALL_ROWS.forEach((rowObj) => {
   KEYBOARD.insertAdjacentElement('beforeend', rowObj.row);
   fillRow(rowObj.row, rowObj.array);
 });
 
+// =====LISTENER BUTTONS ADD TO TEXTAREA=====
 const BUTTONS = document.querySelectorAll('.button-main-text');
 
-// =====LISTENER BUTTONS ADD TO TEXTAREA=====
 BUTTONS.forEach((button) => {
   button.addEventListener(
     'click',
     (event) => {
-      console.log('EVENT', event.target.innerHTML);
       if (event.target.innerHTML === 'Backspase') {
         textareaContent.value = textareaContent.value.slice(0, -1);
       } else if (event.target.innerHTML === 'Enter') {
         textareaContent.value = textareaContent.value + '\r\n';
+      } else if (event.target.innerHTML === 'Del') {
+        textareaContent.value =
+          textareaContent.value.slice(0, textareaContent.selectionStart - 1) +
+          textareaContent.value.slice(textareaContent.selectionStart);
+        console.log(textareaContent.selectionStart);
       } else textareaContent.value += event.target.innerHTML;
     },
     false
@@ -186,8 +198,23 @@ document.addEventListener(
   (event) => {
     const buttonId = `button${event.key}`;
     const pressedButton = document.querySelector(`#${buttonId}`);
-    pressedButton.classList.add('active', 'after');
-    console.log(pressedButton);
+    pressedButton.click();
+    pressedButton.classList.add('button-main-text-before');
+    textareaContent.focus();
+    event.preventDefault();
   },
   false
 );
+document.removeEventListener;
+
+document.addEventListener(
+  'keyup',
+  (event) => {
+    const buttonId = `button${event.key}`;
+    const pressedButton = document.querySelector(`#${buttonId}`);
+    if (pressedButton.classList)
+      pressedButton.classList.remove('button-main-text-before');
+  },
+  false
+);
+document.removeEventListener;

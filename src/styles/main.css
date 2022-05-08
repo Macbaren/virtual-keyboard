@@ -34,6 +34,7 @@ textarea {
   resize: none;
   border: 1px solid var(--main-color);
   caret-color: auto;
+  font-size: 20px;
 }
 
 textarea:invalid {
