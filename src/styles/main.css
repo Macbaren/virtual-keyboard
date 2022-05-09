@@ -22,6 +22,7 @@ main {
   --main-dark-color: rgb(29, 49, 49);
   --main-text-color: mintcream;
   --main-background-color: cadetblue;
+  --main-transparent-text: rgba(245, 255, 250, 0);
 }
 
 h1 {

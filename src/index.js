@@ -9,6 +9,10 @@ FOOTER.innerText =
 
 let textareaContent = document.createElement('textarea');
 
+let isUppercased = false;
+
+let coldStart = true;
+
 // ====KEYBOARD=====
 const KEYBOARD = document.createElement('div');
 KEYBOARD.className = 'keyboard';
@@ -53,6 +57,23 @@ const FIRST_ROW_ARR = [
   'Backspase',
 ];
 
+const FIRST_SHIFTED_ROW_ARR = [
+  '~',
+  '!',
+  '@',
+  '#',
+  '$',
+  '%',
+  '^',
+  '&',
+  '*',
+  '(',
+  ')',
+  '_',
+  '+',
+  'Backspase',
+];
+
 const SECOND_ROW_ARR = [
   'Tab',
   'q',
@@ -68,6 +89,24 @@ const SECOND_ROW_ARR = [
   '[',
   ']',
   '\\',
+  'Del',
+];
+
+const SECOND_SHIFTED_ROW_ARR = [
+  'Tab',
+  'Q',
+  'W',
+  'E',
+  'R',
+  'T',
+  'Y',
+  'U',
+  'I',
+  'O',
+  'P',
+  '{',
+  '}',
+  '|',
   'Del',
 ];
 
@@ -87,6 +126,22 @@ const THIRD_ROW_ARR = [
   'Enter',
 ];
 
+const THIRD_SHIFTED_ROW_ARR = [
+  'CapsLock',
+  'A',
+  'S',
+  'D',
+  'F',
+  'G',
+  'H',
+  'J',
+  'K',
+  'L',
+  ':',
+  '"',
+  'Enter',
+];
+
 const FOURTH_ROW_ARR = [
   'Shift',
   'z',
@@ -103,11 +158,27 @@ const FOURTH_ROW_ARR = [
   'Shift`',
 ];
 
+const FOURTH_SHIFTED_ROW_ARR = [
+  'Shift',
+  'Z',
+  'X',
+  'C',
+  'V',
+  'B',
+  'N',
+  'M',
+  '<',
+  '>',
+  '?',
+  '&#129093',
+  'Shift`',
+];
+
 const FIFTH_ROW_ARR = [
   'Ctrl',
   'Win',
   'Alt',
-  '&#160',
+  'Space',
   'Alt',
   '&#129092',
   '&#129095',
@@ -123,15 +194,25 @@ const ALL_ROWS = [
   { row: FIFTH_ROW, array: FIFTH_ROW_ARR },
 ];
 
+const ALL_SHIFTED_ROWS = [
+  { row: FIRST_ROW, array: FIRST_SHIFTED_ROW_ARR },
+  { row: SECOND_ROW, array: SECOND_SHIFTED_ROW_ARR },
+  { row: THIRD_ROW, array: THIRD_SHIFTED_ROW_ARR },
+  { row: FOURTH_ROW, array: FOURTH_SHIFTED_ROW_ARR },
+  { row: FIFTH_ROW, array: FIFTH_ROW_ARR },
+];
+
 // ======FILL ROWS=====
 const fillRow = (row, rowArr) => {
   rowArr.forEach((el) => {
     const BUTTON = document.createElement('button');
     BUTTON.className = 'button-main-text';
     BUTTON.id = `button${el}`;
+
     switch (el) {
-      case '&#160':
+      case 'Space':
         BUTTON.classList.add('button-space');
+        BUTTON.style.color = 'var(--main-transparent-text)';
         break;
       case 'Backspase':
       case 'CapsLock':
@@ -165,10 +246,27 @@ const fillRow = (row, rowArr) => {
 };
 
 // =====FILL KEYBOARD=====
-ALL_ROWS.forEach((rowObj) => {
-  KEYBOARD.insertAdjacentElement('beforeend', rowObj.row);
-  fillRow(rowObj.row, rowObj.array);
-});
+const fillKeyboard = (allRowsObj) => {
+  document.querySelector('.keyboard').innerHTML = '';
+  console.log('fill', allRowsObj);
+  allRowsObj.forEach((rowObj) => {
+    KEYBOARD.insertAdjacentElement('beforeend', rowObj.row);
+    fillRow(rowObj.row, rowObj.array);
+  });
+};
+
+if (coldStart) {
+  console.log('start');
+  fillKeyboard(ALL_ROWS);
+  coldStart = false;
+}
+
+// =====START FILLING=====
+// if (!isUppercased) {
+//   fillKeyboard(ALL_ROWS);
+// } else {
+//   fillKeyboard(ALL_SHIFTED_ROWS);
+// }
 
 // =====LISTENER BUTTONS ADD TO TEXTAREA=====
 const BUTTONS = document.querySelectorAll('.button-main-text');
@@ -179,39 +277,111 @@ BUTTONS.forEach((button) => {
     (event) => {
       const caretPosition = textareaContent.selectionStart;
 
-      if (event.target.innerHTML === 'Backspase') {
-        textareaContent.value =
-          textareaContent.value.slice(0, textareaContent.selectionStart - 1) +
-          textareaContent.value.slice(textareaContent.selectionStart);
+      function getLineNumberAndColumnIndex(textarea) {
+        const textLines = textarea.value
+          .substr(0, textarea.selectionStart)
+          .split('\n');
+        const currentLineNumber = textLines.length;
+        const currentColumnIndex = textLines[textLines.length - 1].length;
+        return [currentLineNumber, currentColumnIndex];
+      }
 
-        textareaContent.focus();
-        textareaContent.selectionEnd = caretPosition - 1;
-      } else if (event.target.innerHTML === 'Enter') {
-        textareaContent.value =
-          textareaContent.value.slice(0, textareaContent.selectionStart) +
-          '\r\n' +
-          textareaContent.value.slice(textareaContent.selectionStart);
+      const [lineCursorPosition, coloumnCursorPosition] =
+        getLineNumberAndColumnIndex(textareaContent);
 
-        textareaContent.focus();
-        textareaContent.selectionEnd = caretPosition + 1;
-      } else if (event.target.innerHTML === 'Del') {
-        // const caretPosition = textareaContent.selectionStart;
+      switch (event.target.id) {
+        case 'buttonBackspase':
+          textareaContent.value =
+            textareaContent.value.slice(0, textareaContent.selectionStart - 1) +
+            textareaContent.value.slice(textareaContent.selectionStart);
 
-        textareaContent.value =
-          textareaContent.value.slice(0, textareaContent.selectionStart) +
-          textareaContent.value.slice(textareaContent.selectionStart + 1);
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition - 1;
+          break;
 
-        textareaContent.focus();
-        textareaContent.selectionEnd = caretPosition;
-      } else {
-        // const caretPosition = textareaContent.selectionStart;
-        textareaContent.value =
-          textareaContent.value.slice(0, textareaContent.selectionStart) +
-          event.target.innerHTML +
-          textareaContent.value.slice(textareaContent.selectionStart);
+        case 'buttonEnter':
+          textareaContent.value =
+            textareaContent.value.slice(0, textareaContent.selectionStart) +
+            '\r\n' +
+            textareaContent.value.slice(textareaContent.selectionStart);
 
-        textareaContent.focus();
-        textareaContent.selectionEnd = caretPosition + 1;
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition + 1;
+          break;
+
+        case 'buttonDel':
+          textareaContent.value =
+            textareaContent.value.slice(0, textareaContent.selectionStart) +
+            textareaContent.value.slice(textareaContent.selectionStart + 1);
+
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition;
+          break;
+
+        case 'buttonSpace':
+          textareaContent.value =
+            textareaContent.value.slice(0, textareaContent.selectionStart) +
+            ' ' +
+            textareaContent.value.slice(textareaContent.selectionStart);
+
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition + 1;
+          break;
+
+        case 'buttonShift':
+        case 'buttonShift`':
+        case 'buttonCtrl':
+        case 'buttonWin':
+        case 'buttonAlt':
+          return;
+          break;
+
+        case 'button&#129092': // cursor back
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition - 1;
+          break;
+
+        case 'button&#129093': // cursor up
+          if (lineCursorPosition === 1) {
+            textareaContent.focus();
+            textareaContent.selectionStart = coloumnCursorPosition;
+          } else {
+            const previousLine = lineCursorPosition - 1;
+            const beforePreveousLineLength = textareaContent.value
+              .split('\n')
+              .slice(0, previousLine - 1)
+              .reduce((acc, rec) => acc + rec.length, 0);
+            textareaContent.focus();
+            textareaContent.selectionEnd =
+              beforePreveousLineLength + coloumnCursorPosition + 1;
+          }
+          break;
+
+        case 'button&#129094': // cursor ahead
+          textareaContent.focus();
+          textareaContent.selectionStart = caretPosition + 1;
+          break;
+
+        case 'button&#129095':
+          const currentLineLength = textareaContent.value
+            .split('\n')
+            .slice(0, lineCursorPosition)
+            .pop().length;
+          textareaContent.focus();
+          textareaContent.selectionStart =
+            caretPosition + currentLineLength + 1;
+
+          break;
+
+        default:
+          textareaContent.value =
+            textareaContent.value.slice(0, textareaContent.selectionStart) +
+            event.target.innerHTML +
+            textareaContent.value.slice(textareaContent.selectionStart);
+
+          textareaContent.focus();
+          textareaContent.selectionEnd = caretPosition + 1;
+          break;
       }
     },
     false
@@ -223,8 +393,30 @@ document.addEventListener(
   'keydown',
   (event) => {
     const buttonId = `button${event.key}`;
+
+    // if (buttonId === 'buttonShift' || buttonId === 'buttonShift`') {
+    //   isUppercased = true;
+    //   document.querySelector('.keyboard').innerHTML = '';
+    //   console.log('down');
+    //   fillKeyboard(ALL_SHIFTED_ROWS);
+    // }
+    if (
+      buttonId === 'buttonBackspace' ||
+      buttonId === 'buttonDelete' ||
+      buttonId === 'buttonControl' ||
+      buttonId === 'buttonWin' ||
+      buttonId === 'buttonAlt' ||
+      buttonId === 'buttonArrowLeft' ||
+      buttonId === 'buttonArrowUp' ||
+      buttonId === 'buttonArrowRight' ||
+      buttonId === 'buttonArrowDown' ||
+      buttonId === 'buttonEscape' ||
+      buttonId === 'buttonShift'
+    ) {
+      return false;
+    }
+
     const pressedButton = document.querySelector(`#${buttonId}`);
-    // textareaContent.focus();
     pressedButton.click();
     pressedButton.classList.add('button-main-text-before');
 
@@ -238,10 +430,52 @@ document.addEventListener(
   'keyup',
   (event) => {
     const buttonId = `button${event.key}`;
+
+    // if (buttonId === 'buttonShift' || buttonId === 'buttonShift`') {
+    //   isUppercased = false;
+    //   document.querySelector('.keyboard').innerHTML = '';
+    //   console.log('up');
+
+    //   fillKeyboard(ALL_ROWS);
+    // }
+
+    if (
+      buttonId === 'buttonBackspace' ||
+      buttonId === 'buttonDelete' ||
+      buttonId === 'buttonControl' ||
+      buttonId === 'buttonWin' ||
+      buttonId === 'buttonAlt' ||
+      buttonId === 'buttonArrowLeft' ||
+      buttonId === 'buttonArrowUp' ||
+      buttonId === 'buttonArrowRight' ||
+      buttonId === 'buttonArrowDown' ||
+      buttonId === 'buttonEscape' ||
+      buttonId === 'buttonShift'
+    ) {
+      return false;
+    }
+
     const pressedButton = document.querySelector(`#${buttonId}`);
+
     if (pressedButton.classList)
       pressedButton.classList.remove('button-main-text-before');
   },
   false
 );
+
 document.removeEventListener;
+
+// ======SHIFT LOGIC=====
+// const SHIFT_BUTTONS = [
+//   ...document.querySelectorAll('.button-main-text'),
+// ].filter((el) => el.innerText.includes('Shift'));
+// console.log('shift', SHIFT_BUTTONS);
+
+// SHIFT_BUTTONS.forEach((butt) => {
+//   butt.addEventListener('keydown', () => {
+//     console.log('down');
+//     document.querySelector('.keyboard').innerHTML = '';
+//     isUppercased = true;
+//     fillKeyboard(ALL_SHIFTED_ROWS);
+//   });
+// });
