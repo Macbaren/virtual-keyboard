@@ -1,0 +1,148 @@
+.buttons-row {
+  display: flex;
+  gap: 5px;
+}
+
+.button-main-text {
+  width: 50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  color: var(--main-text-color);
+  background: var(--main-color);
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 5px;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.button-main-text:before {
+  content: '';
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 5px;
+}
+
+.button-main-text-before {
+  content: '';
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  /* position: absolute; */
+  top: -2px;
+  left: -2px;
+  /* background-size: 400%; */
+  /* z-index: -1; */
+  filter: blur(1px);
+  /* width: 54px;
+  height: 54px; */
+  animation: glowing 20s linear infinite;
+  /* opacity: 0; */
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 5px;
+  transform: scale(1.1);
+}
+
+.button-main-text:active {
+  color: var(--main-color);
+}
+
+.button-main-text:active:after,
+.button-main-text-active-after {
+  background: transparent;
+}
+
+.button-main-text:hover:before {
+  opacity: 1;
+}
+
+.button-main-text:hover:after {
+  opacity: 0.8;
+}
+
+.button-main-text:after {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--main-color);
+  left: 0;
+  top: 0;
+  border-radius: 5px;
+}
+
+.button-big:after,
+.button-middle:after,
+.button-small:after,
+.button-dark:after,
+.button-space {
+  background: var(--main-dark-color);
+}
+
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button-space {
+  width: 390px;
+}
+
+.button-big {
+  width: 115px;
+  background: var(--main-dark-color);
+}
+
+.button-middle {
+  width: 105px;
+  background: var(--main-dark-color);
+}
+
+.button-small {
+  width: 60px;
+  background: var(--main-dark-color);
+}
+
+.button-dark {
+  background: var(--main-dark-color);
+}
