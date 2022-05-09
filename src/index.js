@@ -177,16 +177,42 @@ BUTTONS.forEach((button) => {
   button.addEventListener(
     'click',
     (event) => {
+      const caretPosition = textareaContent.selectionStart;
+
       if (event.target.innerHTML === 'Backspase') {
-        textareaContent.value = textareaContent.value.slice(0, -1);
-      } else if (event.target.innerHTML === 'Enter') {
-        textareaContent.value = textareaContent.value + '\r\n';
-      } else if (event.target.innerHTML === 'Del') {
         textareaContent.value =
           textareaContent.value.slice(0, textareaContent.selectionStart - 1) +
           textareaContent.value.slice(textareaContent.selectionStart);
-        console.log(textareaContent.selectionStart);
-      } else textareaContent.value += event.target.innerHTML;
+
+        textareaContent.focus();
+        textareaContent.selectionEnd = caretPosition - 1;
+      } else if (event.target.innerHTML === 'Enter') {
+        textareaContent.value =
+          textareaContent.value.slice(0, textareaContent.selectionStart) +
+          '\r\n' +
+          textareaContent.value.slice(textareaContent.selectionStart);
+
+        textareaContent.focus();
+        textareaContent.selectionEnd = caretPosition + 1;
+      } else if (event.target.innerHTML === 'Del') {
+        // const caretPosition = textareaContent.selectionStart;
+
+        textareaContent.value =
+          textareaContent.value.slice(0, textareaContent.selectionStart) +
+          textareaContent.value.slice(textareaContent.selectionStart + 1);
+
+        textareaContent.focus();
+        textareaContent.selectionEnd = caretPosition;
+      } else {
+        // const caretPosition = textareaContent.selectionStart;
+        textareaContent.value =
+          textareaContent.value.slice(0, textareaContent.selectionStart) +
+          event.target.innerHTML +
+          textareaContent.value.slice(textareaContent.selectionStart);
+
+        textareaContent.focus();
+        textareaContent.selectionEnd = caretPosition + 1;
+      }
     },
     false
   );
@@ -198,9 +224,10 @@ document.addEventListener(
   (event) => {
     const buttonId = `button${event.key}`;
     const pressedButton = document.querySelector(`#${buttonId}`);
+    // textareaContent.focus();
     pressedButton.click();
     pressedButton.classList.add('button-main-text-before');
-    textareaContent.focus();
+
     event.preventDefault();
   },
   false
