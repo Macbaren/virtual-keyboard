@@ -248,25 +248,17 @@ const fillRow = (row, rowArr) => {
 // =====FILL KEYBOARD=====
 const fillKeyboard = (allRowsObj) => {
   document.querySelector('.keyboard').innerHTML = '';
-  console.log('fill', allRowsObj);
   allRowsObj.forEach((rowObj) => {
     KEYBOARD.insertAdjacentElement('beforeend', rowObj.row);
     fillRow(rowObj.row, rowObj.array);
   });
 };
 
+// =====START FILLING=====
 if (coldStart) {
-  console.log('start');
   fillKeyboard(ALL_ROWS);
   coldStart = false;
 }
-
-// =====START FILLING=====
-// if (!isUppercased) {
-//   fillKeyboard(ALL_ROWS);
-// } else {
-//   fillKeyboard(ALL_SHIFTED_ROWS);
-// }
 
 // =====LISTENER BUTTONS ADD TO TEXTAREA=====
 const BUTTONS = document.querySelectorAll('.button-main-text');
@@ -431,14 +423,6 @@ document.addEventListener(
   (event) => {
     const buttonId = `button${event.key}`;
 
-    // if (buttonId === 'buttonShift' || buttonId === 'buttonShift`') {
-    //   isUppercased = false;
-    //   document.querySelector('.keyboard').innerHTML = '';
-    //   console.log('up');
-
-    //   fillKeyboard(ALL_ROWS);
-    // }
-
     if (
       buttonId === 'buttonBackspace' ||
       buttonId === 'buttonDelete' ||
@@ -464,18 +448,3 @@ document.addEventListener(
 );
 
 document.removeEventListener;
-
-// ======SHIFT LOGIC=====
-// const SHIFT_BUTTONS = [
-//   ...document.querySelectorAll('.button-main-text'),
-// ].filter((el) => el.innerText.includes('Shift'));
-// console.log('shift', SHIFT_BUTTONS);
-
-// SHIFT_BUTTONS.forEach((butt) => {
-//   butt.addEventListener('keydown', () => {
-//     console.log('down');
-//     document.querySelector('.keyboard').innerHTML = '';
-//     isUppercased = true;
-//     fillKeyboard(ALL_SHIFTED_ROWS);
-//   });
-// });
